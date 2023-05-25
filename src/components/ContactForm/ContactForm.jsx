@@ -1,10 +1,9 @@
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Form, ErrorMessage, Field, Button, Label } from './ContactForm.styled';
-import { nanoid } from 'nanoid';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from 'redux/contactsSlice';
 import { getContacts } from 'redux/selectors';
+import { addContact } from 'redux/contactsSlice';
 
 const InputSchema = Yup.object().shape({
   name: Yup.string().required('Must be required'),
@@ -13,6 +12,26 @@ const InputSchema = Yup.object().shape({
 
 export const ContactForm = () => {
   const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
+
+  const isDublicate = ({ name, number }) => {
+    const refName = name.toLowerCase().trim();
+    const refNumber = number.trim();
+
+    const dublicate = contacts.find(
+      contact =>
+        contact.name.toLowerCase().trim() === refName ||
+        contact.number.trim() === refNumber.trim()
+    );
+    return Boolean(dublicate);
+  };
+
+  const onAddContact = ({ name, number }) => {
+    if (isDublicate({ name, number })) {
+      return alert(`${name} or ${number} is already in contacts.`);
+    }
+    dispatch(addContact({ name, number }));
+  };
 
   return (
     <Formik
@@ -21,9 +40,9 @@ export const ContactForm = () => {
         number: '',
       }}
       validationSchema={InputSchema}
-      onSubmit={(values, actions) => {
-        dispatch(addContact(values));
-        actions.resetForm();
+      onSubmit={(values, { resetForm }) => {
+        onAddContact({ ...values });
+        resetForm();
       }}
     >
       <Form>

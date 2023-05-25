@@ -13,8 +13,8 @@ export const ContactList = () => {
     contact?.name?.toLowerCase().includes(filter.toLowerCase())
   );
 
-  const handleDelete = id => {
-    dispatch(deleteContact(id));
+  const handleDelete = contactId => {
+    dispatch(deleteContact(contactId));
   };
 
   return (
