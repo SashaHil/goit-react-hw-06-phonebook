@@ -1,9 +1,10 @@
-import PropTypes from 'prop-types';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Form, ErrorMessage, Field, Button, Label } from './ContactForm.styled';
-import { useDispatch } from 'react-redux';
+import { nanoid } from 'nanoid';
+import { useDispatch, useSelector } from 'react-redux';
 import { addContact } from 'redux/contactsSlice';
+import { getContacts } from 'redux/selectors';
 
 const InputSchema = Yup.object().shape({
   name: Yup.string().required('Must be required'),
@@ -56,7 +57,3 @@ export const ContactForm = () => {
     </Formik>
   );
 };
-
-// ContactForm.propType = {
-//   onSubmit: PropTypes.func.isRequired,
-// };
